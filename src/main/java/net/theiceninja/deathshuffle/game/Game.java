@@ -1,6 +1,8 @@
 package net.theiceninja.deathshuffle.game;
 
 import lombok.Getter;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.theiceninja.deathshuffle.DeathShufflePlugin;
 import net.theiceninja.deathshuffle.game.states.DefaultGameState;
 import net.theiceninja.deathshuffle.utils.ColorUtil;
@@ -64,6 +66,8 @@ public class Game {
     public void pickRandomDeath(Player player) {
         int randomNumber = (int) randomizer(-1, EntityDamageEvent.DamageCause.values().length);
         this.taskForPlayer.put(player.getUniqueId(), EntityDamageEvent.DamageCause.values()[randomNumber]);
+
+        player.sendMessage(ColorUtil.color("&eאתה צריך להשלים את המשימה&8: " + getDeath(player).toString()));
     }
 
     public EntityDamageEvent.DamageCause getDeath(Player player) {
@@ -111,6 +115,20 @@ public class Game {
             if (player == null) continue;
 
             player.sendTitle(ColorUtil.color("&c&lDeath&e&lShuffle"), ColorUtil.color(message), 0, 40, 0);
+        }
+    }
+
+    public void sendActionBar(String str) {
+        for (UUID playerUUID : players) {
+            Player player = Bukkit.getPlayer(playerUUID);
+            if (player == null) continue;
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ColorUtil.color(str)));
+        }
+
+        for (UUID playerUUID : spectators) {
+            Player player = Bukkit.getPlayer(playerUUID);
+            if (player == null) continue;
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ColorUtil.color(str)));
         }
     }
 
