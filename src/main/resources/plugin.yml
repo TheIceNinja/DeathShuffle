@@ -1,0 +1,11 @@
+name: DeathShuffle
+main: net.theiceninja.deathshuffle.DeathShufflePlugin
+version: 1.0.0
+api-version: 1.18
+author: TheIceNinja
+commands:
+  deathshuffle:
+    description: death shuffle handler
+    permission: deathshuffle.admin
+    aliases:
+      - df
