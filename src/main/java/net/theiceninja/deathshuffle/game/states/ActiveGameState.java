@@ -1,5 +1,7 @@
 package net.theiceninja.deathshuffle.game.states;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.theiceninja.deathshuffle.DeathShufflePlugin;
 import net.theiceninja.deathshuffle.game.GameState;
 import net.theiceninja.deathshuffle.game.tasks.PlayerTaskCooldown;
@@ -16,6 +18,7 @@ import java.util.UUID;
 
 public class ActiveGameState extends GameState {
 
+    @Getter @Setter
     private PlayerTaskCooldown taskCooldown;
 
     @Override
@@ -34,6 +37,7 @@ public class ActiveGameState extends GameState {
 
             getGame().pickRandomDeath(player);
         }
+
     }
 
     @Override
@@ -41,6 +45,9 @@ public class ActiveGameState extends GameState {
         super.onDisable();
         if (this.taskCooldown != null) this.taskCooldown.cancel();
 
+        getGame().getTaskForPlayer().clear();
+
+        getGame().sendMessage("&cהמשחק נגמר...");
         for (UUID playerUUID : getGame().getPlayers()) {
             Player player = Bukkit.getPlayer(playerUUID);
             if (player == null) return;
@@ -48,6 +55,9 @@ public class ActiveGameState extends GameState {
             player.setGameMode(GameMode.ADVENTURE);
             player.setFoodLevel(20);
             player.setHealth(20);
+
+            player.getInventory().clear();
+            player.teleport(getGame().getSpawnLocation());
         }
 
         for (UUID playerUUID : getGame().getSpectators()) {
@@ -57,6 +67,9 @@ public class ActiveGameState extends GameState {
             player.setGameMode(GameMode.ADVENTURE);
             player.setFoodLevel(20);
             player.setHealth(20);
+
+            player.getInventory().clear();
+            player.teleport(getGame().getSpawnLocation());
         }
 
         getGame().getPlayers().clear();
@@ -67,6 +80,7 @@ public class ActiveGameState extends GameState {
     private void onDeath(PlayerDeathEvent event) {
         if (this.taskCooldown == null) return;
 
+        event.setDeathMessage(null);
         Player player = event.getEntity();
         if (!getGame().isPlaying(player)) return;
 

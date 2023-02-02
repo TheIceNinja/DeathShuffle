@@ -12,12 +12,16 @@ public class DeathShufflePlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        getConfig().options().copyDefaults(false);
+        saveDefaultConfig();
+
         Game game = new Game(this);
 
         // set the state to default (enable listeners)
         game.setState(new DefaultGameState());
 
         getCommand("deathshuffle").setExecutor(new DeathShuffleCommand(game));
+        getCommand("deathshuffle").setTabCompleter(new DeathShuffleCommand(game));
         Bukkit.getConsoleSender().sendMessage(ColorUtil.color(Messages.PREFIX + "&aenabled!"));
     }
 
