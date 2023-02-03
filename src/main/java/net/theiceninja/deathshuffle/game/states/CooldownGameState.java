@@ -1,5 +1,6 @@
 package net.theiceninja.deathshuffle.game.states;
 
+import lombok.Getter;
 import net.theiceninja.deathshuffle.DeathShufflePlugin;
 import net.theiceninja.deathshuffle.game.GameState;
 import net.theiceninja.deathshuffle.game.tasks.CooldownTask;
@@ -19,6 +20,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class CooldownGameState extends GameState {
 
+    @Getter
     private CooldownTask cooldownTask;
 
     @Override

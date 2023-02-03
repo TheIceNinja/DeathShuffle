@@ -13,6 +13,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scoreboard.DisplaySlot;
 
 import java.util.UUID;
 
@@ -25,6 +26,7 @@ public class ActiveGameState extends GameState {
     public void onEnable(DeathShufflePlugin plugin) {
         super.onEnable(plugin);
 
+        getGame().updateScoreBoard();
         getGame().sendMessage("&e&lהמשחק התחיל!");
         if (this.taskCooldown != null) this.taskCooldown.cancel();
 
@@ -58,6 +60,7 @@ public class ActiveGameState extends GameState {
 
             player.getInventory().clear();
             player.teleport(getGame().getSpawnLocation());
+            player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
         }
 
         for (UUID playerUUID : getGame().getSpectators()) {
@@ -70,6 +73,7 @@ public class ActiveGameState extends GameState {
 
             player.getInventory().clear();
             player.teleport(getGame().getSpawnLocation());
+            player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
         }
 
         getGame().getPlayers().clear();

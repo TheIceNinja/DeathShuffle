@@ -6,6 +6,8 @@ import lombok.Setter;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.theiceninja.deathshuffle.DeathShufflePlugin;
+import net.theiceninja.deathshuffle.game.states.ActiveGameState;
+import net.theiceninja.deathshuffle.game.states.CooldownGameState;
 import net.theiceninja.deathshuffle.game.states.DefaultGameState;
 import net.theiceninja.deathshuffle.utils.ColorUtil;
 import net.theiceninja.deathshuffle.utils.Messages;
@@ -14,6 +16,10 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.util.*;
 
@@ -40,6 +46,7 @@ public class Game {
         player.setFoodLevel(20);
 
         player.teleport(getSpawnLocation());
+        updateScoreBoard();
     }
 
     public void removePlayer(Player player) {
@@ -49,6 +56,7 @@ public class Game {
 
         // todo do something if the size is 0
         this.spectators.add(player.getUniqueId());
+        updateScoreBoard();
 
         player.getInventory().clear();
         player.setGameMode(GameMode.SPECTATOR);
@@ -155,5 +163,68 @@ public class Game {
 
     public Location getSpectatorsLocation() {
         return plugin.getConfig().getLocation("game.spectators");
+    }
+
+    private void setScoreboard(Player player) {
+        ScoreboardManager manager = Bukkit.getScoreboardManager();
+        Scoreboard scoreboard = manager.getNewScoreboard();
+
+        List<String> scoreboardLines = new ArrayList<>();
+
+        Objective objective = scoreboard.registerNewObjective("ice",
+                "dummy",
+                ColorUtil.color("&#3bb6fb&lN&#4bbce7&li&#5bc3d3&ln&#6bc9be&lj&#7bd0aa&la&#8bd696&lN&#9bdd82&le&#abe36e&lt&#bbea5a&lw&#cbf045&lo&#dbf731&lr&#ebfd1d&lk &7| &fמוות מתחלף"));
+        scoreboardLines.add("&f");
+
+
+
+        if (getGameState() instanceof CooldownGameState) {
+            CooldownGameState cooldownGameState = (CooldownGameState) getGameState();
+            if (cooldownGameState.getCooldownTask() == null) return;
+
+            scoreboardLines.add("&fהמשחק מתחיל בעוד&8: &e" + cooldownGameState.getCooldownTask().getTimeLeft());
+        } else if (getGameState() instanceof ActiveGameState) {
+            scoreboardLines.add("&fמצבך במשחק&8: " + (isPlaying(player) ? "&aחי" : "&7צופה"));
+            scoreboardLines.add("&r");
+            scoreboardLines.add("&fכמות הסיבובים&8: &2" +  getRounds());
+
+            scoreboardLines.add("&r");
+            scoreboardLines.add("&fהמשימה שלך&8: &b&l" + (getDeath(player) == null ? "&cאין לך משימה!" : getDeath(player).toString()));
+            ActiveGameState activeGameState = (ActiveGameState) getGameState();
+            if (activeGameState.getTaskCooldown() == null) return;
+
+            scoreboardLines.add("&fזמן שנותר למשימה&8: &e" + activeGameState.getTaskCooldown().getTimeLeft() / 60 + "&8:&e" + activeGameState.getTaskCooldown().getTimeLeft() % 60);
+
+        }
+
+        scoreboardLines.add("&r ");
+        scoreboardLines.add("&fשחקנים שיש במשחק&8: &6" + players.size());
+
+        scoreboardLines.add("&r ");
+        scoreboardLines.add("&7play.iceninja.us.to");
+
+        for (int i = 0; i < scoreboardLines.size(); i++) {
+            String line = ColorUtil.color(scoreboardLines.get(i));
+            objective.getScore(line).setScore(scoreboardLines.size() - i);
+        }
+
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        player.setScoreboard(scoreboard);
+    }
+
+    public void updateScoreBoard() {
+        for (UUID playerUUID : players) {
+            Player player = Bukkit.getPlayer(playerUUID);
+            if (player == null) continue;
+
+            setScoreboard(player);
+        }
+
+        for (UUID playerUUID : spectators) {
+            Player player = Bukkit.getPlayer(playerUUID);
+            if (player == null) continue;
+
+            setScoreboard(player);
+        }
     }
 }
