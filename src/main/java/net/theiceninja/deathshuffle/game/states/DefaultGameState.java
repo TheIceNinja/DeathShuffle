@@ -57,6 +57,8 @@ public class DefaultGameState extends GameState {
 
     @EventHandler
     private void onInteract(PlayerInteractEvent event) {
+        if (event.getPlayer().getGameMode() == GameMode.CREATIVE) return;
+
         Block block = event.getClickedBlock();
         if (block == null) return;
 
@@ -77,7 +79,7 @@ public class DefaultGameState extends GameState {
     @EventHandler
     private void onDrop(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
-        if (!getGame().isPlaying(player)) return;
+        if (player.getGameMode() == GameMode.CREATIVE) return;
 
         event.setCancelled(true);
     }

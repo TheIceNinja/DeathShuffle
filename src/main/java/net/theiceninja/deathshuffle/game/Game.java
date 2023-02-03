@@ -14,6 +14,7 @@ import net.theiceninja.deathshuffle.utils.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -27,15 +28,15 @@ import java.util.*;
 @RequiredArgsConstructor
 public class Game {
 
-    private final List<UUID> players  = new ArrayList<>();
-    private final List<UUID> spectators = new ArrayList<>();
-
     @Setter
     private int rounds = 1;
 
-    private final Map<UUID, EntityDamageEvent.DamageCause> taskForPlayer = new HashMap<>();
-    private GameState gameState;
+    private final List<UUID> players  = new ArrayList<>();
+    private final List<UUID> spectators = new ArrayList<>();
 
+    private final Map<UUID, EntityDamageEvent.DamageCause> taskForPlayer = new HashMap<>();
+
+    private GameState gameState;
     private final DeathShufflePlugin plugin;
 
     public void addPlayer(Player player) {
@@ -60,6 +61,7 @@ public class Game {
 
         player.getInventory().clear();
         player.setGameMode(GameMode.SPECTATOR);
+        player.playSound(player, Sound.ENTITY_BLAZE_HURT, 1, 1);
         player.teleport(getSpectatorsLocation());
 
         sendMessage("&4" + player.getDisplayName() + " &cלא השלים את ההאתגר שלו ונפסל.");
@@ -80,6 +82,10 @@ public class Game {
         return this.players.contains(player.getUniqueId());
     }
 
+    public boolean isSpectating(Player player) {
+        return spectators.contains(player.getUniqueId());
+    }
+
     public void pickRandomDeath(Player player) {
         int randomNumber = (int) randomizer(-1, EntityDamageEvent.DamageCause.values().length);
         this.taskForPlayer.put(player.getUniqueId(), EntityDamageEvent.DamageCause.values()[randomNumber]);
@@ -93,6 +99,8 @@ public class Game {
                     "&b&lSUICIDE = &eתתאבד ותחשוב טוב" + "\n" +
                     "&b&lDRYOUT = &eלמות ממוב שהוא לא במים"
         ));
+
+        player.sendMessage(ColorUtil.color("&6https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html"));
     }
 
     public EntityDamageEvent.DamageCause getDeath(Player player) {
@@ -174,9 +182,7 @@ public class Game {
         Objective objective = scoreboard.registerNewObjective("ice",
                 "dummy",
                 ColorUtil.color("&#3bb6fb&lN&#4bbce7&li&#5bc3d3&ln&#6bc9be&lj&#7bd0aa&la&#8bd696&lN&#9bdd82&le&#abe36e&lt&#bbea5a&lw&#cbf045&lo&#dbf731&lr&#ebfd1d&lk &7| &fמוות מתחלף"));
-        scoreboardLines.add("&f");
-
-
+        scoreboardLines.add("&r");
 
         if (getGameState() instanceof CooldownGameState) {
             CooldownGameState cooldownGameState = (CooldownGameState) getGameState();
@@ -184,6 +190,7 @@ public class Game {
 
             scoreboardLines.add("&fהמשחק מתחיל בעוד&8: &e" + cooldownGameState.getCooldownTask().getTimeLeft());
         } else if (getGameState() instanceof ActiveGameState) {
+            scoreboardLines.add("&f ");
             scoreboardLines.add("&fמצבך במשחק&8: " + (isPlaying(player) ? "&aחי" : "&7צופה"));
             scoreboardLines.add("&r");
             scoreboardLines.add("&fכמות הסיבובים&8: &2" +  getRounds());
@@ -194,10 +201,9 @@ public class Game {
             if (activeGameState.getTaskCooldown() == null) return;
 
             scoreboardLines.add("&fזמן שנותר למשימה&8: &e" + activeGameState.getTaskCooldown().getTimeLeft() / 60 + "&8:&e" + activeGameState.getTaskCooldown().getTimeLeft() % 60);
-
         }
 
-        scoreboardLines.add("&r ");
+        scoreboardLines.add("&f");
         scoreboardLines.add("&fשחקנים שיש במשחק&8: &6" + players.size());
 
         scoreboardLines.add("&r ");
@@ -225,6 +231,22 @@ public class Game {
             if (player == null) continue;
 
             setScoreboard(player);
+        }
+    }
+
+    public void playsound(Sound sound) {
+        for (UUID playerUUID : players) {
+            Player player = Bukkit.getPlayer(playerUUID);
+            if (player == null) continue;
+
+            player.playSound(player, sound, 1, 1);
+        }
+
+        for (UUID playerUUID : spectators) {
+            Player player = Bukkit.getPlayer(playerUUID);
+            if (player == null) continue;
+
+            player.playSound(player, sound, 1, 1);
         }
     }
 }

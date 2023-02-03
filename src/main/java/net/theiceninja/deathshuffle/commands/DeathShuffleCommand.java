@@ -1,9 +1,6 @@
 package net.theiceninja.deathshuffle.commands;
 
-import net.theiceninja.deathshuffle.commands.subcommands.SetLocationSubCommand;
-import net.theiceninja.deathshuffle.commands.subcommands.StartSubCommand;
-import net.theiceninja.deathshuffle.commands.subcommands.StopSubCommand;
-import net.theiceninja.deathshuffle.commands.subcommands.SubCommand;
+import net.theiceninja.deathshuffle.commands.subcommands.*;
 import net.theiceninja.deathshuffle.game.Game;
 import net.theiceninja.deathshuffle.utils.ColorUtil;
 import net.theiceninja.deathshuffle.utils.Messages;
@@ -24,6 +21,7 @@ public class DeathShuffleCommand implements CommandExecutor, TabCompleter {
         subCommands.add(new StartSubCommand(game));
         subCommands.add(new StopSubCommand(game));
         subCommands.add(new SetLocationSubCommand(game.getPlugin()));
+        subCommands.add(new ReviveSubCommand(game));
     }
 
     @Override

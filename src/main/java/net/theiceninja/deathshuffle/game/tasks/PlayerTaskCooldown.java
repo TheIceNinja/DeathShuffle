@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import net.theiceninja.deathshuffle.game.Game;
 import net.theiceninja.deathshuffle.game.states.ActiveGameState;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -24,7 +25,7 @@ public class PlayerTaskCooldown extends BukkitRunnable {
 
         if (timeLeft <= 0) {
             cancel();
-
+            // remove all the players from the game(who didn't finish the task)
             if (game.getPlayers().size() != game.getTaskForPlayer().size()) {
                 for (UUID playerUUID : game.getTaskForPlayer().keySet()) {
                     Player player = Bukkit.getPlayer(playerUUID);
@@ -35,13 +36,20 @@ public class PlayerTaskCooldown extends BukkitRunnable {
             }
 
             startGame();
-
             return;
         }
 
         if (game.getTaskForPlayer().isEmpty()) {
             cancel();
             startGame();
+            return;
+        }
+
+        if (timeLeft < 10) {
+            game.playsound(Sound.BLOCK_NOTE_BLOCK_PLING);
+            game.sendActionBar("&fהסיבוב נגמר בעוד&8: &c" + timeLeft / 60 + "&8:&c" + timeLeft % 60);
+            game.updateScoreBoard();
+
             return;
         }
 

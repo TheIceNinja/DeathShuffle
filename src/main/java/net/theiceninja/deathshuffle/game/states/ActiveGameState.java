@@ -39,7 +39,6 @@ public class ActiveGameState extends GameState {
 
             getGame().pickRandomDeath(player);
         }
-
     }
 
     @Override
