@@ -62,36 +62,4 @@ public class CooldownGameState extends GameState {
 
         player.kickPlayer(ColorUtil.color("&c&lDeath&e&lShuffle\n&cהמשחק כבר התחיל!"));
     }
-
-    @EventHandler
-    private void onDamage(EntityDamageEvent event) {
-        event.setCancelled(true);
-    }
-
-    @EventHandler
-    private void onInteract(PlayerInteractEvent event) {
-        Block block = event.getClickedBlock();
-        if (block == null) return;
-
-        if (block.getType().equals(Material.CHEST))
-            event.setCancelled(true);
-    }
-
-    @EventHandler
-    private void onItemPickUp(EntityPickupItemEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
-
-        Player player = (Player) event.getEntity();
-        if (player.getGameMode() == GameMode.CREATIVE) return;
-
-        event.setCancelled(true);
-    }
-
-    @EventHandler
-    private void onDrop(PlayerDropItemEvent event) {
-        Player player = event.getPlayer();
-        if (!getGame().isPlaying(player)) return;
-
-        event.setCancelled(true);
-    }
 }

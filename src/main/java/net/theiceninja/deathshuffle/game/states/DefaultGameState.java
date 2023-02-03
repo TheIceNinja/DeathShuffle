@@ -49,38 +49,4 @@ public class DefaultGameState extends GameState {
                         + " &cיצא מהשרת!"
         ));
     }
-
-    @EventHandler
-    private void onDamage(EntityDamageEvent event) {
-        event.setCancelled(true);
-    }
-
-    @EventHandler
-    private void onInteract(PlayerInteractEvent event) {
-        if (event.getPlayer().getGameMode() == GameMode.CREATIVE) return;
-
-        Block block = event.getClickedBlock();
-        if (block == null) return;
-
-        if (block.getType().equals(Material.CHEST))
-            event.setCancelled(true);
-    }
-
-    @EventHandler
-    private void onItemPickUp(EntityPickupItemEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
-
-        Player player = (Player) event.getEntity();
-        if (player.getGameMode() == GameMode.CREATIVE) return;
-
-        event.setCancelled(true);
-    }
-
-    @EventHandler
-    private void onDrop(PlayerDropItemEvent event) {
-        Player player = event.getPlayer();
-        if (player.getGameMode() == GameMode.CREATIVE) return;
-
-        event.setCancelled(true);
-    }
 }
