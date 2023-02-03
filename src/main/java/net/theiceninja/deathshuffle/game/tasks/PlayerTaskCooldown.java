@@ -45,7 +45,7 @@ public class PlayerTaskCooldown extends BukkitRunnable {
             return;
         }
 
-        if (timeLeft < 10) {
+        if (timeLeft <= 10) {
             game.playsound(Sound.BLOCK_NOTE_BLOCK_PLING);
             game.sendActionBar("&fהסיבוב נגמר בעוד&8: &c" + timeLeft / 60 + "&8:&c" + timeLeft % 60);
             game.updateScoreBoard();
