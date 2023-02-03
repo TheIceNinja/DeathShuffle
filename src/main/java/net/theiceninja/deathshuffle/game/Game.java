@@ -55,7 +55,6 @@ public class Game {
             this.players.remove(player.getUniqueId());
         }
 
-        // todo do something if the size is 0
         this.spectators.add(player.getUniqueId());
         updateScoreBoard();
 
