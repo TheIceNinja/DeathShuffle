@@ -38,7 +38,6 @@ public class DeathShuffleCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        // todo sub commands
         if (args.length == 0) {
             player.sendMessage(ColorUtil.color("&eUsage: /deathshuffle <start|revive|stop|setlocation>"));
             return true;
