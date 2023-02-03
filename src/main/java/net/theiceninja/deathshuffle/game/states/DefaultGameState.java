@@ -39,6 +39,7 @@ public class DefaultGameState extends GameState {
         player.setGameMode(GameMode.ADVENTURE);
         player.setHealth(20);
         player.setFoodLevel(20);
+        player.getInventory().clear();
     }
 
     @EventHandler
