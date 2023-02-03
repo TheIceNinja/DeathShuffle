@@ -140,14 +140,14 @@ public class Game {
             Player player = Bukkit.getPlayer(playerUUID);
             if (player == null) continue;
 
-            player.sendTitle(ColorUtil.color("&c&lDeath&e&lShuffle"), ColorUtil.color(message), 0, 40, 0);
+            player.sendTitle(ColorUtil.color("&#FA1B00&lDeath&#FAA700&lShuffle"), ColorUtil.color(message), 0, 40, 0);
         }
 
         for (UUID playerUUID : this.spectators) {
             Player player = Bukkit.getPlayer(playerUUID);
             if (player == null) continue;
 
-            player.sendTitle(ColorUtil.color("&c&lDeath&e&lShuffle"), ColorUtil.color(message), 0, 40, 0);
+            player.sendTitle(ColorUtil.color("&#FA1B00&lDeath&#FAA700&lShuffle"), ColorUtil.color(message), 0, 40, 0);
         }
     }
 

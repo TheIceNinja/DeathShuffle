@@ -7,6 +7,7 @@ import net.theiceninja.deathshuffle.game.GameState;
 import net.theiceninja.deathshuffle.game.tasks.PlayerTaskCooldown;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -89,7 +90,9 @@ public class ActiveGameState extends GameState {
 
         EntityDamageEvent damageEvent = player.getLastDamageCause();
         if (damageEvent.getCause().equals(getGame().getDeath(player))) {
+            // remove the player task(clear players in the cooldown)
             getGame().getTaskForPlayer().remove(player.getUniqueId());
+            player.playSound(player, Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
             getGame().sendMessage("&2&l" + player.getDisplayName() + " &aהשלים את המשימה שלו!");
         }
     }
