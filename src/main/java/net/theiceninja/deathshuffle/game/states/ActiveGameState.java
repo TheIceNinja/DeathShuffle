@@ -111,5 +111,6 @@ public class ActiveGameState extends GameState {
         Player player = event.getPlayer();
 
         getGame().removePlayer(player);
+        getGame().getTaskForPlayer().remove(player.getUniqueId());
     }
 }
