@@ -70,7 +70,7 @@ public class Game {
             sendTitle("&aהמנצח של המשחק הוא &2&l" + winner.getDisplayName());
 
             setState(new DefaultGameState());
-        } else if (players.size() == 0) {
+        } else if (players.isEmpty()) {
             sendMessage("&cאין מנצח למשחק, המשחק נגמר!");
 
             setState(new DefaultGameState());
@@ -86,7 +86,7 @@ public class Game {
     }
 
     public void pickRandomDeath(Player player) {
-        int randomNumber = (int) randomizer(-1, EntityDamageEvent.DamageCause.values().length);
+        int randomNumber = (int) randomizer(-1, EntityDamageEvent.DamageCause.values().length + 1);
         this.taskForPlayer.put(player.getUniqueId(), EntityDamageEvent.DamageCause.values()[randomNumber]);
 
         player.sendMessage(ColorUtil.color("&eאתה צריך להשלים את המשימה&8: &b&l" + getDeath(player).toString()));
