@@ -154,12 +154,14 @@ public class Game {
         for (UUID playerUUID : players) {
             Player player = Bukkit.getPlayer(playerUUID);
             if (player == null) continue;
+
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ColorUtil.color(str)));
         }
 
         for (UUID playerUUID : spectators) {
             Player player = Bukkit.getPlayer(playerUUID);
             if (player == null) continue;
+
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ColorUtil.color(str)));
         }
     }

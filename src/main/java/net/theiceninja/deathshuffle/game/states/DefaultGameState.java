@@ -18,16 +18,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class DefaultGameState extends GameState {
 
-    @Override
-    public void onEnable(DeathShufflePlugin plugin) {
-        super.onEnable(plugin);
-    }
-
-    @Override
-    public void onDisable() {
-        super.onDisable();
-    }
-
     @EventHandler
     private void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();

@@ -109,8 +109,11 @@ public class ActiveGameState extends GameState {
     private void onQuit(PlayerQuitEvent event) {
         event.setQuitMessage(null);
         Player player = event.getPlayer();
-
-        getGame().removePlayer(player);
-        getGame().getTaskForPlayer().remove(player.getUniqueId());
+        if (getGame().isSpectating(player)) {
+            getGame().getSpectators().remove(player.getUniqueId());
+        } else {
+            getGame().removePlayer(player);
+            getGame().getTaskForPlayer().remove(player.getUniqueId());
+        }
     }
 }
