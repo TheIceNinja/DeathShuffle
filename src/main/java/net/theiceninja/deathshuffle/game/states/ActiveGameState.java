@@ -78,6 +78,7 @@ public class ActiveGameState extends GameState {
 
         getGame().getPlayers().clear();
         getGame().getSpectators().clear();
+        getGame().setRounds(0);
     }
 
     @EventHandler
