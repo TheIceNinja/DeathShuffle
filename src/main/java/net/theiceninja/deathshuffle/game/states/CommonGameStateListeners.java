@@ -8,6 +8,8 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
@@ -49,18 +51,35 @@ public class CommonGameStateListeners implements Listener {
     }
 
     @EventHandler
-    private void onDrop(PlayerDropItemEvent event) {
+    private void onFoodLevelChange(FoodLevelChangeEvent event) {
         if (game.getGameState() instanceof ActiveGameState) return;
-
-        Player player = event.getPlayer();
-        if (!game.isPlaying(player)) return;
 
         event.setCancelled(true);
     }
 
     @EventHandler
-    private void onFoodLevelChange(FoodLevelChangeEvent event) {
+    private void onBlockBreak(BlockBreakEvent event) {
+        Player player = event.getPlayer();
         if (game.getGameState() instanceof ActiveGameState) return;
+        if (player.getGameMode() == GameMode.CREATIVE) return;
+
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    private void onPlaceBlock(BlockPlaceEvent event) {
+        Player player = event.getPlayer();
+        if (game.getGameState() instanceof ActiveGameState) return;
+        if (player.getGameMode() == GameMode.CREATIVE) return;
+
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    private void onItemDrop(PlayerDropItemEvent event) {
+        Player player = event.getPlayer();
+        if (game.getGameState() instanceof ActiveGameState) return;
+        if (player.getGameMode() == GameMode.CREATIVE) return;
 
         event.setCancelled(true);
     }
