@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -53,6 +54,13 @@ public class CommonGameStateListeners implements Listener {
 
         Player player = event.getPlayer();
         if (!game.isPlaying(player)) return;
+
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    private void onFoodLevelChange(FoodLevelChangeEvent event) {
+        if (game.getGameState() instanceof ActiveGameState) return;
 
         event.setCancelled(true);
     }

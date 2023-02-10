@@ -8,4 +8,4 @@ commands:
     description: death shuffle handler
     permission: deathshuffle.admin
     aliases:
-      - df
+      - ds
